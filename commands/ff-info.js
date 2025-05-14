@@ -93,8 +93,8 @@ module.exports = {
       
       // Process the data to match your desired format
       const nickname = data.basicInfo?.nickname || 'Unknown Player';
-      const region = data.basicInfo?.region || region;
-      const uid = data.basicInfo?.accountId || uid;
+      const serverRegion = data.basicInfo?.region || region;
+      const accountUid = data.basicInfo?.accountId || uid;
       const level = data.basicInfo?.level || 'N/A';
       const exp = data.basicInfo?.exp || 'N/A';
       const likes = data.basicInfo?.liked || 'N/A';
@@ -138,8 +138,8 @@ module.exports = {
       // Create formatted message
       const formattedMessage = `🎮 Free Fire Profile - ${nickname}\n` +
         `👤 ACCOUNT BASIC INFO\n` +
-        `🌍 Server: ${region} ${region === 'IND' ? '🇮🇳' : region === 'BD' ? '🇧🇩' : ''}\n` +
-        `🆔 UID: ${uid}\n` +
+        `🌍 Server: ${serverRegion} ${serverRegion === 'IND' ? '🇮🇳' : serverRegion === 'BD' ? '🇧🇩' : ''}\n` +
+        `🆔 UID: ${accountUid}\n` +
         `🔰 Level: ${level}\n` +
         `⭐ EXP: ${exp}\n` +
         `👍 Likes: ${likes}\n` +
