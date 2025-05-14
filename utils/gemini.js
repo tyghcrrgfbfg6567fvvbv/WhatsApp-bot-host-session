@@ -45,11 +45,23 @@ global.fetch = function(url, options = {}) {
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     
+    // Convert headers to plain object if it's a Headers instance
+    let headersObj = {};
+    if (options.headers) {
+      if (options.headers instanceof Headers) {
+        for (const [key, value] of options.headers.entries()) {
+          headersObj[key] = value;
+        }
+      } else {
+        headersObj = options.headers;
+      }
+    }
+    
     const req = https.request({
       hostname: parsedUrl.hostname,
       path: parsedUrl.pathname + parsedUrl.search,
       method: options.method || 'GET',
-      headers: options.headers ? Object.fromEntries(options.headers.entries()) : {},
+      headers: headersObj,
     }, (res) => {
       let data = '';
       res.on('data', (chunk) => {
