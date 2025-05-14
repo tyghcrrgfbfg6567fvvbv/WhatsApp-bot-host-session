@@ -25,7 +25,7 @@ module.exports = {
       // Get the sender's details
       const sender = msg.key.remoteJid;
       
-      // First send the image message
+      // Send the image message
       let sentMessage;
       if (imageExists) {
         // Send the message with the image
@@ -45,11 +45,8 @@ module.exports = {
         console.log('Using placeholder image. Add an image at assets/alive.jpg for custom image');
       }
       
-      // Forward the message
+      // Reply with the welcome message (without forwarding)
       if (sentMessage) {
-        await XeonBotInc.sendMessage(sender, { forward: sentMessage });
-        
-        // Reply with the welcome message
         await XeonBotInc.sendMessage(sender, { 
           text: "Welcome to Solo leveling Bot.",
           quoted: sentMessage
