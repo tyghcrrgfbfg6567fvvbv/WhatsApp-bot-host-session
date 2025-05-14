@@ -1,3 +1,4 @@
+
 const fs = require('fs');
 const path = require('path');
 
@@ -45,29 +46,29 @@ const handleCommand = async (XeonBotInc, m) => {
     // Set flag to check owner status in commands
     msg.isOwner = isOwner(msg.key.remoteJid);
 
-  // Get the message content
-  const msg = m.messages[0];
-  if (!msg.message) return;
+    // Get the message content
+    const messageContent = msg.message.conversation || 
+                           (msg.message.extendedTextMessage && 
+                            msg.message.extendedTextMessage.text) || '';
 
-  const messageContent = msg.message.conversation || 
-                         (msg.message.extendedTextMessage && 
-                          msg.message.extendedTextMessage.text) || '';
+    // Check if message starts with a command prefix
+    if (!messageContent.startsWith('.')) return;
 
-  // Check if message starts with a command prefix
-  if (!messageContent.startsWith('.')) return;
+    // Extract command name
+    const commandName = messageContent.slice(1).trim().split(' ')[0].toLowerCase();
 
-  // Extract command name
-  const commandName = messageContent.slice(1).trim().split(' ')[0].toLowerCase();
-
-  // Find and execute the command
-  const command = commands.get(commandName);
-  if (command) {
-    try {
-      await command.execute(XeonBotInc, msg);
-      console.log(`Executed command: ${commandName}`);
-    } catch (error) {
-      console.error(`Error executing command ${commandName}:`, error);
+    // Find and execute the command
+    const command = commands.get(commandName);
+    if (command) {
+      try {
+        await command.execute(XeonBotInc, msg);
+        console.log(`Executed command: ${commandName}`);
+      } catch (error) {
+        console.error(`Error executing command ${commandName}:`, error);
+      }
     }
+  } catch (error) {
+    console.error('Error in command handler:', error);
   }
 };
 
