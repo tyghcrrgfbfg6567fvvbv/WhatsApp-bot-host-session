@@ -120,26 +120,8 @@ async function qr() {
   
   XeonBotInc.ev.on("messages.upsert", async (m) => {
     try {
-      // Get message content
-      const msg = m.messages[0];
-      if (!msg.message) return;
-      
-      // Extract message content
-      const messageContent = msg.message.conversation || 
-                           (msg.message.extendedTextMessage && 
-                            msg.message.extendedTextMessage.text) || 
-                           (msg.message.imageMessage && 
-                            msg.message.imageMessage.caption) || '';
-      
-      // Get sender info
-      const sender = msg.key.remoteJid;
-      const senderName = msg.pushName || 'Unknown';
-      
-      // Log incoming message details
-      console.log(chalk.yellow("📩 INCOMING MESSAGE"));
-      console.log(chalk.blue(`From: ${senderName} (${sender})`));
-      console.log(chalk.green(`Content: ${messageContent}`));
-      console.log(chalk.gray('─'.repeat(50)));
+      // Log new messages
+      console.log(chalk.yellow("📩 New message received"));
       
       // Handle commands in the message if command handler is loaded
       if (commandHandler) {
@@ -148,18 +130,7 @@ async function qr() {
     } catch (error) {
       console.error("Error handling message:", error);
     }
-  });
-  
-  // Monitor outgoing messages
-  XeonBotInc.ev.on("messages.update", (updates) => {
-    for (const update of updates) {
-      if (update.status && update.status === 3) { // Status 3 means message was sent
-        console.log(chalk.magenta("📤 OUTGOING MESSAGE"));
-        console.log(chalk.blue(`To: ${update.key.remoteJid}`));
-        console.log(chalk.gray('─'.repeat(50)));
-      }
-    }
-  });
+  })
 }
 qr()
 
