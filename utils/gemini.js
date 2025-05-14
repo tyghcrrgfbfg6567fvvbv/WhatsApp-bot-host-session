@@ -1,4 +1,3 @@
-
 // Add fetch polyfill for Node.js v16
 const https = require('https');
 const { URL } = require('url');
@@ -13,7 +12,7 @@ global.Headers = class Headers {
       });
     }
   }
-  
+
   append(name, value) {
     name = name.toLowerCase();
     if (this.headers[name]) {
@@ -22,19 +21,19 @@ global.Headers = class Headers {
       this.headers[name] = value;
     }
   }
-  
+
   get(name) {
     return this.headers[name.toLowerCase()] || null;
   }
-  
+
   has(name) {
     return this.headers[name.toLowerCase()] !== undefined;
   }
-  
+
   set(name, value) {
     this.headers[name.toLowerCase()] = value;
   }
-  
+
   entries() {
     return Object.entries(this.headers);
   }
@@ -44,7 +43,7 @@ global.Headers = class Headers {
 global.fetch = function(url, options = {}) {
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
-    
+
     // Convert headers to plain object if it's a Headers instance
     let headersObj = {};
     if (options.headers) {
@@ -56,7 +55,7 @@ global.fetch = function(url, options = {}) {
         headersObj = options.headers;
       }
     }
-    
+
     const req = https.request({
       hostname: parsedUrl.hostname,
       path: parsedUrl.pathname + parsedUrl.search,
@@ -82,7 +81,7 @@ global.fetch = function(url, options = {}) {
     if (options.body) {
       req.write(options.body);
     }
-    
+
     req.on('error', reject);
     req.end();
   });
@@ -105,11 +104,11 @@ global.Response = class Response {
     this.statusText = init.statusText || '';
     this.headers = new Headers(init.headers);
   }
-  
+
   json() {
     return Promise.resolve(JSON.parse(this.body));
   }
-  
+
   text() {
     return Promise.resolve(this.body);
   }
@@ -131,8 +130,8 @@ async function generateResponse(prompt) {
       return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-    
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
     const requestBody = {
       contents: [{
         parts: [{ text: prompt }]
@@ -142,7 +141,7 @@ async function generateResponse(prompt) {
         maxOutputTokens: 800
       }
     };
-    
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -150,15 +149,15 @@ async function generateResponse(prompt) {
       },
       body: JSON.stringify(requestBody)
     });
-    
+
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Gemini API Error:', errorData);
       throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
     }
-    
+
     const data = await response.json();
-    
+
     // Extract the text from the response
     if (data.candidates && 
         data.candidates[0] && 
