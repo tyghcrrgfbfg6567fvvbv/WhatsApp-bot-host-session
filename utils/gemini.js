@@ -1,11 +1,55 @@
 
 // Add fetch polyfill for Node.js v16
 const https = require('https');
+const { URL } = require('url');
+
+// Define Headers class
+global.Headers = class Headers {
+  constructor(init = {}) {
+    this.headers = {};
+    if (init) {
+      Object.keys(init).forEach(key => {
+        this.headers[key.toLowerCase()] = init[key];
+      });
+    }
+  }
+  
+  append(name, value) {
+    name = name.toLowerCase();
+    if (this.headers[name]) {
+      this.headers[name] += `, ${value}`;
+    } else {
+      this.headers[name] = value;
+    }
+  }
+  
+  get(name) {
+    return this.headers[name.toLowerCase()] || null;
+  }
+  
+  has(name) {
+    return this.headers[name.toLowerCase()] !== undefined;
+  }
+  
+  set(name, value) {
+    this.headers[name.toLowerCase()] = value;
+  }
+  
+  entries() {
+    return Object.entries(this.headers);
+  }
+};
+
+// Define fetch polyfill
 global.fetch = function(url, options = {}) {
   return new Promise((resolve, reject) => {
-    const req = https.request(url, {
+    const parsedUrl = new URL(url);
+    
+    const req = https.request({
+      hostname: parsedUrl.hostname,
+      path: parsedUrl.pathname + parsedUrl.search,
       method: options.method || 'GET',
-      headers: options.headers || {},
+      headers: options.headers ? Object.fromEntries(options.headers.entries()) : {},
     }, (res) => {
       let data = '';
       res.on('data', (chunk) => {
@@ -15,8 +59,10 @@ global.fetch = function(url, options = {}) {
         resolve({
           ok: res.statusCode >= 200 && res.statusCode < 300,
           status: res.statusCode,
+          statusText: res.statusMessage,
           json: () => Promise.resolve(JSON.parse(data)),
-          text: () => Promise.resolve(data)
+          text: () => Promise.resolve(data),
+          headers: new Headers(res.headers)
         });
       });
     });
@@ -28,6 +74,33 @@ global.fetch = function(url, options = {}) {
     req.on('error', reject);
     req.end();
   });
+};
+
+// Define other necessary classes
+global.Request = class Request {
+  constructor(input, init = {}) {
+    this.url = input;
+    this.method = init.method || 'GET';
+    this.headers = new Headers(init.headers);
+    this.body = init.body || null;
+  }
+};
+
+global.Response = class Response {
+  constructor(body, init = {}) {
+    this.body = body;
+    this.status = init.status || 200;
+    this.statusText = init.statusText || '';
+    this.headers = new Headers(init.headers);
+  }
+  
+  json() {
+    return Promise.resolve(JSON.parse(this.body));
+  }
+  
+  text() {
+    return Promise.resolve(this.body);
+  }
 };
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
