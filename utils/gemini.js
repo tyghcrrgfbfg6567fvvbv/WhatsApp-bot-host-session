@@ -1,121 +1,6 @@
-
-// Add fetch polyfill for Node.js v16
-const https = require('https');
-const { URL } = require('url');
-
-// Define Headers class
-global.Headers = class Headers {
-  constructor(init = {}) {
-    this.headers = {};
-    if (init) {
-      Object.keys(init).forEach(key => {
-        this.headers[key.toLowerCase()] = init[key];
-      });
-    }
-  }
-  
-  append(name, value) {
-    name = name.toLowerCase();
-    if (this.headers[name]) {
-      this.headers[name] += `, ${value}`;
-    } else {
-      this.headers[name] = value;
-    }
-  }
-  
-  get(name) {
-    return this.headers[name.toLowerCase()] || null;
-  }
-  
-  has(name) {
-    return this.headers[name.toLowerCase()] !== undefined;
-  }
-  
-  set(name, value) {
-    this.headers[name.toLowerCase()] = value;
-  }
-  
-  entries() {
-    return Object.entries(this.headers);
-  }
-};
-
-// Define fetch polyfill
-global.fetch = function(url, options = {}) {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    
-    // Convert headers to plain object if it's a Headers instance
-    let headersObj = {};
-    if (options.headers) {
-      if (options.headers instanceof Headers) {
-        for (const [key, value] of options.headers.entries()) {
-          headersObj[key] = value;
-        }
-      } else {
-        headersObj = options.headers;
-      }
-    }
-    
-    const req = https.request({
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: options.method || 'GET',
-      headers: headersObj,
-    }, (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      res.on('end', () => {
-        resolve({
-          ok: res.statusCode >= 200 && res.statusCode < 300,
-          status: res.statusCode,
-          statusText: res.statusMessage,
-          json: () => Promise.resolve(JSON.parse(data)),
-          text: () => Promise.resolve(data),
-          headers: new Headers(res.headers)
-        });
-      });
-    });
-
-    if (options.body) {
-      req.write(options.body);
-    }
-    
-    req.on('error', reject);
-    req.end();
-  });
-};
-
-// Define other necessary classes
-global.Request = class Request {
-  constructor(input, init = {}) {
-    this.url = input;
-    this.method = init.method || 'GET';
-    this.headers = new Headers(init.headers);
-    this.body = init.body || null;
-  }
-};
-
-global.Response = class Response {
-  constructor(body, init = {}) {
-    this.body = body;
-    this.status = init.status || 200;
-    this.statusText = init.statusText || '';
-    this.headers = new Headers(init.headers);
-  }
-  
-  json() {
-    return Promise.resolve(JSON.parse(this.body));
-  }
-  
-  text() {
-    return Promise.resolve(this.body);
-  }
-};
-
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { exec } = require('child_process');
+const util = require('util');
+const execPromise = util.promisify(exec);
 
 // Initialize the Gemini API with the key
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -124,15 +9,18 @@ if (!GEMINI_API_KEY) {
   console.error('GEMINI_API_KEY environment variable is not set');
 }
 
-// Create a function to generate responses using direct API call
+/**
+ * Generate a response using Gemini API via curl
+ * @param {string} prompt - The prompt text to send to Gemini
+ * @returns {Promise<string>} - The response from Gemini
+ */
 async function generateResponse(prompt) {
   try {
     if (!GEMINI_API_KEY) {
       return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-    
+    // Create the request body
     const requestBody = {
       contents: [{
         parts: [{ text: prompt }]
@@ -142,23 +30,25 @@ async function generateResponse(prompt) {
         maxOutputTokens: 800
       }
     };
-    
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Gemini API Error:', errorData);
-      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+
+    // Escape the JSON for shell command
+    const escapedBody = JSON.stringify(requestBody).replace(/"/g, '\\"');
+
+    // Execute curl command
+    const curlCommand = `curl -s -X POST "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}" \
+      -H "Content-Type: application/json" \
+      -d "${escapedBody}"`;
+
+    console.log('Executing curl command for Gemini API...');
+    const { stdout, stderr } = await execPromise(curlCommand);
+
+    if (stderr) {
+      console.error('Curl stderr:', stderr);
     }
-    
-    const data = await response.json();
-    
+
+    // Parse the response
+    const data = JSON.parse(stdout);
+
     // Extract the text from the response
     if (data.candidates && 
         data.candidates[0] && 
