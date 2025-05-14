@@ -80,11 +80,11 @@ async function qr() {
 
       // Send confirmation message to bot owner
       await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n\n✅ Connection established successfully\n🔄 Session will remain active` }, {quoted: xeonses});
-      
+
       // Send confirmation message to the same number that connected
       const connectedNumber = phoneNumber.startsWith('+') ? phoneNumber : '+' + phoneNumber;
       const formattedNumber = connectedNumber.replace('+', '') + '@s.whatsapp.net';
-      
+
       // Only send if the number is different from the bot's own number
       if (formattedNumber !== XeonBotInc.user.id) {
         await XeonBotInc.sendMessage(formattedNumber, { 
@@ -103,7 +103,7 @@ async function qr() {
     }
   })
   XeonBotInc.ev.on('creds.update', saveCreds)
-  
+
   // Load command handler
   let commandHandler;
   try {
@@ -118,7 +118,7 @@ async function qr() {
       console.log(chalk.yellow("📁 Created commands directory"));
     }
   }
-  
+
   // Function to log message details
   const logMessage = (message, direction) => {
     try {
@@ -126,7 +126,7 @@ async function qr() {
       const senderName = message.pushName || 'Unknown';
       const messageType = Object.keys(message.message || {})[0] || 'unknown';
       let content = '';
-      
+
       // Extract text content based on message type
       if (messageType === 'conversation') {
         content = message.message.conversation;
@@ -139,7 +139,7 @@ async function qr() {
       } else {
         content = `[${messageType}]`;
       }
-      
+
       // Format and log the message
       const directionIcon = direction === 'incoming' ? '📥' : '📤';
       const colorFunction = direction === 'incoming' ? chalk.cyan : chalk.green;
@@ -148,7 +148,7 @@ async function qr() {
       console.error('Error logging message:', error);
     }
   };
-  
+
   // Monitor outgoing messages
   XeonBotInc.ev.on("messages.send", async (m) => {
     try {
@@ -162,7 +162,7 @@ async function qr() {
       console.error("Error logging outgoing message:", error);
     }
   });
-  
+
   // Handle incoming messages
   XeonBotInc.ev.on("messages.upsert", async (m) => {
     try {
@@ -170,19 +170,34 @@ async function qr() {
       for (const message of m.messages) {
         logMessage(message, 'incoming');
       }
-      
+
+      // Check if message is from owner
+      const isOwner = (jid) => {
+        try {
+          const settingsPath = path.join(__dirname, 'settings.json');
+          if (fs.existsSync(settingsPath)) {
+            const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+            return jid.includes(settings.owner);
+          }
+          return jid.includes('918822308081'); // Fallback to hardcoded owner
+        } catch (error) {
+          console.error("Error checking owner status:", error);
+          return false;
+        }
+      };
+
       // Handle commands in the message if command handler is loaded
       if (commandHandler) {
         await commandHandler.handleCommand(XeonBotInc, m);
       }
-      
+
       // Handle auto-chat functionality
       try {
         // Check if auto_chat is enabled in settings
         const settingsPath = path.join(__dirname, 'settings.json');
         if (fs.existsSync(settingsPath)) {
           const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-          
+
           // If auto_chat is enabled and it's not a command (doesn't start with '.')
           if (settings.auto_chat && m.messages && m.messages.length > 0) {
             const msg = m.messages[0];
@@ -193,28 +208,28 @@ async function qr() {
                 console.log("Blocked interaction with filtered number:", sender);
                 return;
               }
-              
+
               const messageContent = msg.message.conversation || 
                                   (msg.message.extendedTextMessage && 
                                     msg.message.extendedTextMessage.text) || '';
-              
+
               // Only auto-reply if it's not a command
               if (messageContent && !messageContent.startsWith('.')) {
                 const sender = msg.key.remoteJid;
-                
+
                 try {
                   // Get sender name for personalized responses
                   const senderName = msg.pushName || 'User';
-                  
+
                   // Use Gemini API to generate a response
                   const { generateResponse } = require('./utils/gemini');
                   const prompt = `You are a friendly WhatsApp assistant called "Solo Leveling Bot". 
                   Keep your responses concise (max 3 sentences). 
                   The user's name is ${senderName} and their message is: "${messageContent}"`;
-                  
+
                   // Show typing indicator
                   await XeonBotInc.sendPresenceUpdate('composing', sender);
-                  
+
                   // Generate and send response
                   const aiResponse = await generateResponse(prompt);
                   await XeonBotInc.sendMessage(sender, { 

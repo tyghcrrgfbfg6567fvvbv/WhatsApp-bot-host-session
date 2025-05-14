@@ -1,10 +1,7 @@
 
 {
   "auto_chat": true,
-  "blocked_numbers": ["867051314767696"]
-}
-
-{
-  "auto_chat": true,
+  "blocked_numbers": ["867051314767696"],
+  "owner": "918822308081",
   "auto_chat_users": {}
 }
