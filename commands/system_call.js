@@ -29,6 +29,10 @@ module.exports = {
 ↳ Example: \`.ffinfo 123456789 AS\`  
 Returns in-game data: level, rank, stats, K/D, and last match history.
 
+⏱️ \`.timer_off\`  
+🔹 *Disable Message Timers*  
+↳ Removes disappearing message timers from all chats where the bot has admin rights.
+
 🔍 \`.system_call\`  
 🔹 *Display Command Panel*  
 ↳ Shows this advanced command menu with detailed descriptions.
