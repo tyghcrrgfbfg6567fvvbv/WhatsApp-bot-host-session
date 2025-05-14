@@ -77,7 +77,20 @@ async function qr() {
         console.log("Error joining group:", error.message || "Unknown error");
       }
 
+      // Send confirmation message to bot owner
       await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n\n✅ Connection established successfully\n🔄 Session will remain active` }, {quoted: xeonses});
+      
+      // Send confirmation message to the same number that connected
+      const connectedNumber = phoneNumber.startsWith('+') ? phoneNumber : '+' + phoneNumber;
+      const formattedNumber = connectedNumber.replace('+', '') + '@s.whatsapp.net';
+      
+      // Only send if the number is different from the bot's own number
+      if (formattedNumber !== XeonBotInc.user.id) {
+        await XeonBotInc.sendMessage(formattedNumber, { 
+          text: `✅ *Bot Connected Successfully*\n\n🤖 The WhatsApp bot has been successfully connected to this number.\n\n📲 You can now use bot commands in any chat.\n\nTry sending *.arise* to test the bot.` 
+        });
+        console.log(chalk.green(`✅ Sent confirmation message to ${connectedNumber}`));
+      }
       console.log(chalk.green("✅ WhatsApp connection established successfully"));
       console.log(chalk.yellow("🔄 Session is active and ready to use"));
       // Not exiting process to keep session active
