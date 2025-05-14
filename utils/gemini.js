@@ -88,6 +88,9 @@ global.fetch = function(url, options = {}) {
   });
 };
 
+// Load user memory system
+const memorySystem = require('./memory');
+
 // Define other necessary classes
 global.Request = class Request {
   constructor(input, init = {}) {
@@ -125,10 +128,42 @@ if (!GEMINI_API_KEY) {
 }
 
 // Create a function to generate responses using direct API call
-async function generateResponse(prompt) {
+async function generateResponse(prompt, userId = null, userName = 'User') {
   try {
     if (!GEMINI_API_KEY) {
       return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
+    }
+    
+    // If userId is provided, use memory system
+    let enhancedPrompt = prompt;
+    let conversationHistory = [];
+    
+    if (userId) {
+      // Store this user message in memory
+      memorySystem.addMessageToMemory(userId, 'user', prompt);
+      
+      // Get conversation history
+      conversationHistory = memorySystem.getConversationHistory(userId, 8);
+      
+      // Get user summary for context
+      const userSummary = memorySystem.getUserSummary(userId);
+      
+      // Create an enhanced prompt with memory context
+      enhancedPrompt = `
+You are a friendly WhatsApp assistant called "Solo Leveling Bot". 
+Keep your responses concise (max 3 sentences).
+
+USER CONTEXT:
+- Name: ${userName}
+- Message count: ${userSummary.messageCount}
+- Last active: ${userSummary.lastActive}
+- Common topics: ${userSummary.commonTopics.join(', ')}
+
+CONVERSATION HISTORY:
+${conversationHistory.map(msg => `${msg.role === 'user' ? userName : 'Bot'}: ${msg.content}`).join('\n')}
+
+The user's current message is: "${prompt}"
+      `;
     }
 
     // Use the correct model endpoint for gemini-1.0-pro (updated from gemini-pro)
@@ -136,7 +171,7 @@ async function generateResponse(prompt) {
 
     const requestBody = {
       contents: [{
-        parts: [{ text: prompt }]
+        parts: [{ text: enhancedPrompt }]
       }],
       generationConfig: {
         temperature: 0.7,
@@ -197,7 +232,14 @@ async function generateResponse(prompt) {
         data.candidates[0].content && 
         data.candidates[0].content.parts && 
         data.candidates[0].content.parts[0].text) {
-      return data.candidates[0].content.parts[0].text;
+      const responseText = data.candidates[0].content.parts[0].text;
+      
+      // Store the assistant's response in memory if userId is provided
+      if (userId) {
+        memorySystem.addMessageToMemory(userId, 'assistant', responseText);
+      }
+      
+      return responseText;
     } else {
       console.error('Unexpected response structure:', JSON.stringify(data));
       return "I received a response but couldn't understand it. Please try again.";
@@ -208,4 +250,17 @@ async function generateResponse(prompt) {
   }
 }
 
-module.exports = { generateResponse };
+// Generate a memory-aware response
+async function generateMemoryAwareResponse(userId, message, userName = 'User') {
+  try {
+    return await generateResponse(message, userId, userName);
+  } catch (error) {
+    console.error('Error with memory-aware response:', error);
+    return "I had trouble accessing my memory. Let me try again.";
+  }
+}
+
+module.exports = { 
+  generateResponse,
+  generateMemoryAwareResponse
+};

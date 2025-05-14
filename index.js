@@ -194,22 +194,31 @@ async function qr() {
                   // Get sender name for personalized responses
                   const senderName = msg.pushName || 'User';
                   
-                  // Use Gemini API to generate a response
-                  const { generateResponse } = require('./utils/gemini');
-                  const prompt = `You are a friendly WhatsApp assistant called "Solo Leveling Bot". 
-                  Keep your responses concise (max 3 sentences). 
-                  The user's name is ${senderName} and their message is: "${messageContent}"`;
+                  // Extract the user ID (phone number)
+                  const userId = sender.split('@')[0];
+                  
+                  // Update user info in memory
+                  const memorySystem = require('./utils/memory');
+                  memorySystem.updateUserInfo(userId, {
+                    name: senderName,
+                    lastSeen: Date.now()
+                  });
+                  
+                  // Use memory-aware Gemini API
+                  const { generateMemoryAwareResponse } = require('./utils/gemini');
                   
                   // Show typing indicator
                   await XeonBotInc.sendPresenceUpdate('composing', sender);
                   
-                  // Generate and send response
-                  const aiResponse = await generateResponse(prompt);
+                  // Generate memory-aware response
+                  const aiResponse = await generateMemoryAwareResponse(userId, messageContent, senderName);
+                  
+                  // Send the response
                   await XeonBotInc.sendMessage(sender, { 
                     text: aiResponse,
                     quoted: msg
                   });
-                  console.log(chalk.blue(`🤖 Auto-replied to ${sender} with Gemini AI`));
+                  console.log(chalk.blue(`🤖 Memory-aware auto-reply to ${sender} (${senderName})`));
                 } catch (error) {
                   console.error("Error in Gemini response:", error);
                   // Fallback response if Gemini fails
@@ -249,3 +258,16 @@ process.on('uncaughtException', function (err) {
 })
 
 process.on('warning', e => console.warn('Warning: ', e.message))
+
+// Set up periodic memory maintenance (clean up memories older than 60 days)
+setInterval(() => {
+  try {
+    const { cleanupOldMemories } = require('./utils/memory');
+    const cleanedCount = cleanupOldMemories(60);
+    if (cleanedCount > 0) {
+      console.log(chalk.yellow(`🧹 Memory maintenance: Cleaned up ${cleanedCount} old user memories`));
+    }
+  } catch (error) {
+    console.error('Error during memory maintenance:', error);
+  }
+}, 24 * 60 * 60 * 1000); // Run once a day
