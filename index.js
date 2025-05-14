@@ -190,12 +190,34 @@ async function qr() {
               if (messageContent && !messageContent.startsWith('.')) {
                 const sender = msg.key.remoteJid;
                 
-                // Simple auto-reply
-                await XeonBotInc.sendMessage(sender, { 
-                  text: "I'm a Solo Leveling Bot. You can try these commands:\n• .arise - Show bot status\n• .auto_chat on/off - Enable/disable auto replies",
-                  quoted: msg
-                });
-                console.log(chalk.blue(`🤖 Auto-replied to ${sender}`));
+                try {
+                  // Get sender name for personalized responses
+                  const senderName = msg.pushName || 'User';
+                  
+                  // Use Gemini API to generate a response
+                  const { generateResponse } = require('./utils/gemini');
+                  const prompt = `You are a friendly WhatsApp assistant called "Solo Leveling Bot". 
+                  Keep your responses concise (max 3 sentences). 
+                  The user's name is ${senderName} and their message is: "${messageContent}"`;
+                  
+                  // Show typing indicator
+                  await XeonBotInc.sendPresenceUpdate('composing', sender);
+                  
+                  // Generate and send response
+                  const aiResponse = await generateResponse(prompt);
+                  await XeonBotInc.sendMessage(sender, { 
+                    text: aiResponse,
+                    quoted: msg
+                  });
+                  console.log(chalk.blue(`🤖 Auto-replied to ${sender} with Gemini AI`));
+                } catch (error) {
+                  console.error("Error in Gemini response:", error);
+                  // Fallback response if Gemini fails
+                  await XeonBotInc.sendMessage(sender, { 
+                    text: "I couldn't process that right now. You can try commands like .arise or .auto_chat on/off.",
+                    quoted: msg
+                  });
+                }
               }
             }
           }

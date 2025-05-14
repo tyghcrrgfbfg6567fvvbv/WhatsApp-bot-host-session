@@ -48,7 +48,7 @@ module.exports = {
       // Reply with the welcome message (without forwarding)
       if (sentMessage) {
         await XeonBotInc.sendMessage(sender, { 
-          text: "Welcome to Solo leveling Bot.\n\n*Available Commands:*\n• .arise - Show bot status\n• .auto_chat on/off - Enable/disable auto replies",
+          text: "Welcome to Solo leveling Bot.\n\n*Available Commands:*\n• .arise - Show bot status\n• .auto_chat on/off - Enable/disable AI-powered chat using Gemini",
           quoted: sentMessage
         });
       }

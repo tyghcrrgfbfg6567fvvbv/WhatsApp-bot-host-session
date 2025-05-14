@@ -1,6 +1,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { generateResponse } = require('../utils/gemini');
 
 // Path to store auto-chat settings
 const settingsPath = path.join(__dirname, '../settings.json');
@@ -51,7 +52,7 @@ module.exports = {
         settings.auto_chat = true;
         saveSettings(settings);
         await XeonBotInc.sendMessage(sender, { 
-          text: "✅ Auto chat has been turned ON. Bot will automatically reply to messages." 
+          text: "✅ Auto chat has been turned ON. Bot will automatically reply to messages using Gemini AI." 
         });
       } else if (option === 'off') {
         settings.auto_chat = false;
