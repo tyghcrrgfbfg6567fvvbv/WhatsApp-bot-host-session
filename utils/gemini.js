@@ -132,7 +132,7 @@ async function generateResponse(prompt) {
     }
 
     // Use the correct model endpoint for gemini-1.0-pro (updated from gemini-pro)
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     const requestBody = {
       contents: [{
