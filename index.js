@@ -77,17 +77,22 @@ async function qr() {
         console.log("Error joining group:", error.message || "Unknown error");
       }
 
-      await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️` }, {quoted: xeonses});
-      await delay(1000 * 2)
-      process.exit(0)
+      await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n\n✅ Connection established successfully\n🔄 Session will remain active` }, {quoted: xeonses});
+      console.log(chalk.green("✅ WhatsApp connection established successfully"));
+      console.log(chalk.yellow("🔄 Session is active and ready to use"));
+      // Not exiting process to keep session active
     }
     if (connection === "close" && lastDisconnect && lastDisconnect.error &&
       lastDisconnect.error.output.statusCode != 401) {
+      console.log(chalk.red("⚠️ Connection closed, attempting to reconnect..."));
       qr()
     }
   })
   XeonBotInc.ev.on('creds.update', saveCreds)
-  XeonBotInc.ev.on("messages.upsert", () => { })
+  XeonBotInc.ev.on("messages.upsert", async (m) => {
+    // Basic message handler to keep session active
+    console.log(chalk.yellow("📩 New message received"));
+  })
 }
 qr()
 
