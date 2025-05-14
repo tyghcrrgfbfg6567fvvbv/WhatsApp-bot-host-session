@@ -6,7 +6,6 @@ entrypoint = "main.sh"
 channel = "stable-22_11"
 
 [workflows]
-runButton = "Run WhatsApp Pairing"
 
 [[workflows.workflow]]
 name = "Run"
