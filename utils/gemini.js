@@ -130,7 +130,7 @@ async function generateResponse(prompt) {
       return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
 
     const requestBody = {
       contents: [{
