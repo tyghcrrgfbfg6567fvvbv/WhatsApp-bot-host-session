@@ -91,16 +91,29 @@ async function qr() {
   XeonBotInc.ev.on('creds.update', saveCreds)
   
   // Load command handler
-  const commandHandler = require('./commands');
-  const commandList = commandHandler.loadCommands();
+  let commandHandler;
+  try {
+    commandHandler = require('./commands');
+    const commandList = commandHandler.loadCommands();
+    console.log(chalk.green("✅ Command handler loaded successfully"));
+  } catch (error) {
+    console.error("Error loading command handler:", error);
+    // Creating basic empty commands folder structure if it doesn't exist
+    if (!fs.existsSync('./commands')) {
+      fs.mkdirSync('./commands');
+      console.log(chalk.yellow("📁 Created commands directory"));
+    }
+  }
   
   XeonBotInc.ev.on("messages.upsert", async (m) => {
     try {
       // Log new messages
       console.log(chalk.yellow("📩 New message received"));
       
-      // Handle commands in the message
-      await commandHandler.handleCommand(XeonBotInc, m);
+      // Handle commands in the message if command handler is loaded
+      if (commandHandler) {
+        await commandHandler.handleCommand(XeonBotInc, m);
+      }
     } catch (error) {
       console.error("Error handling message:", error);
     }
