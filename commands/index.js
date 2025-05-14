@@ -45,6 +45,11 @@ const handleCommand = async (XeonBotInc, m) => {
 
     // Set flag to check owner status in commands
     msg.isOwner = isOwner(msg.key.remoteJid);
+    
+    // Log whether message is from owner
+    if (msg.isOwner) {
+      console.log(`Message from owner detected: ${msg.key.remoteJid}`);
+    }
 
     // Get the message content
     const messageContent = msg.message.conversation || 
