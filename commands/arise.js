@@ -62,10 +62,37 @@ _"I am no longer weak. I am the ruler of shadows."_`;
       // Get the sender's details
       const sender = msg.key.remoteJid;
       
-      // Send the text message
-      const sentMessage = await XeonBotInc.sendMessage(sender, { 
-        text: caption
-      });
+      // Create assets folder if it doesn't exist
+      const assetsDir = path.join(__dirname, '../assets');
+      if (!fs.existsSync(assetsDir)) {
+        fs.mkdirSync(assetsDir);
+      }
+      
+      // Path to the alive image
+      const imagePath = path.join(assetsDir, 'alive.jpg');
+      
+      // Check if image exists, if not we'll use a different approach
+      const imageExists = fs.existsSync(imagePath);
+      
+      // Send the image message with caption
+      let sentMessage;
+      if (imageExists) {
+        // Send the message with the existing image
+        const image = fs.readFileSync(imagePath);
+        sentMessage = await XeonBotInc.sendMessage(sender, { 
+          image: image, 
+          caption: caption 
+        });
+      } else {
+        // If image doesn't exist, use a placeholder shadow monarch image
+        sentMessage = await XeonBotInc.sendMessage(sender, { 
+          image: { url: 'https://i.ibb.co/K0ZSt8M/bot-alive.jpg' },
+          caption: caption 
+        });
+        
+        // Inform through console log
+        console.log('Using placeholder image. Add an image at assets/alive.jpg for custom image');
+      }
       
       // Reply with available commands (without forwarding)
       if (sentMessage) {
