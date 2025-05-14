@@ -81,13 +81,22 @@ const {  state, saveCreds } =await useMultiFileAuthState(`./sessions`)
     XeonBotInc.ev.on("connection.update",async  (s) => {
         const { connection, lastDisconnect } = s
         if (connection == "open") {
-            await delay(1000 * 10)
+            await delay(1000 * 5) // Reduced delay to save resources
             await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `🪀Support/Contact Developer\n\n\n⎆Donate: https://i.ibb.co/W2gYn6S/binance.png\n\n⎆YouTube: https://youtube.com/@DGXeon\n\n⎆Telegram Channel: https://t.me/xeonbotinc\n\n⎆Telegram Chat: https://t.me/+AYOyJflnt-AzNGFl\n\n⎆WhatsApp Gc1: https://chat.whatsapp.com/Kjm8rnDFcpb04gQNSTbW2d\n\n⎆WhatsApp Gc2: https://chat.whatsapp.com/EEOnU0V7dl9HF1mMFO8QWa\n\n⎆WhatsApp Gc3: https://chat.whatsapp.com/Dh0lD0Ee5hN1JMFXNqtxSG\n\n⎆WhatsApp Pm: Wa.me/916909137213\n\n⎆Instagram: https://instagram.com/unicorn_xeon13\n\n⎆GitHub: https://github.com/DGXeon/\n\n⎆Blog: https://dreamguyxeonfiles.blogspot.com/2022/05/bots%20whatsapp%20mods.html?m=1\n\n\n` });
             let sessionXeon = fs.readFileSync('./sessions/creds.json');
             await delay(1000 * 2) 
-             const xeonses = await  XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` })
-               XeonBotInc.groupAcceptInvite("Kjm8rnDFcpb04gQNSTbW2d");
-             await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n
+            const xeonses = await XeonBotInc.sendMessage(XeonBotInc.user.id, { document: sessionXeon, mimetype: `application/json`, fileName: `creds.json` })
+            
+            // Try to join group with error handling to prevent crashes
+            try {
+                await XeonBotInc.groupAcceptInvite("Kjm8rnDFcpb04gQNSTbW2d");
+                console.log("Successfully joined group");
+            } catch (error) {
+                console.log("Error joining group:", error.message || "Unknown error");
+                // Continue execution even if group join fails
+            }
+            
+            await XeonBotInc.sendMessage(XeonBotInc.user.id, { text: `⚠️Do not share this file with anybody⚠️\n
 ┌─❖
 │ Ohayo 😽
 └┬❖  
@@ -121,5 +130,12 @@ if (e.includes("rate-overlimit")) return
 if (e.includes("Connection Closed")) return
 if (e.includes("Timed Out")) return
 if (e.includes("Value not found")) return
+if (e.includes("resource-limit")) {
+    console.log('Resource limit reached. This is often temporary, try again later or upgrade compute resources.')
+    return
+}
 console.log('Caught exception: ', err)
 })
+
+// Improve memory management
+process.on('warning', e => console.warn('Warning: ', e.message))
