@@ -107,17 +107,43 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize the Gemini API with the key
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCy_ZbcdfIvSUuuQVhZ4FW34DAFDEE-iIE';
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
-// Create a function to generate responses
+// Create a function to generate responses using direct API call
 async function generateResponse(prompt) {
   try {
-    // For text-only input, use the gemini-pro model
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
     
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    return response.text();
+    const requestBody = {
+      contents: [{
+        parts: [{ text: prompt }]
+      }]
+    };
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Extract the text from the response
+    if (data.candidates && 
+        data.candidates[0] && 
+        data.candidates[0].content && 
+        data.candidates[0].content.parts && 
+        data.candidates[0].content.parts[0].text) {
+      return data.candidates[0].content.parts[0].text;
+    } else {
+      console.error('Unexpected response structure:', JSON.stringify(data));
+      return "I received a response but couldn't understand it. Please try again.";
+    }
   } catch (error) {
     console.error('Error generating response from Gemini:', error);
     return "I'm having trouble connecting to my brain right now. Please try again later.";
