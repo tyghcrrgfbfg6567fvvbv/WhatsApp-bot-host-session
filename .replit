@@ -6,6 +6,7 @@ entrypoint = "main.sh"
 channel = "stable-22_11"
 
 [workflows]
+runButton = "Run"
 
 [[workflows.workflow]]
 name = "Run"
