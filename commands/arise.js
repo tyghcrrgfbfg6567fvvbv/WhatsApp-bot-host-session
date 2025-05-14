@@ -97,7 +97,7 @@ _"I am no longer weak. I am the ruler of shadows."_`;
       // Reply with available commands (without forwarding)
       if (sentMessage) {
         await XeonBotInc.sendMessage(sender, { 
-          text: "Available Commands:\n• .arise - Show Shadow Monarch status\n• .auto_chat on/off - Enable/disable AI-powered chat using Gemini\n• .shadow - Show Shadow Monarch themed status",
+          text: "Available Commands:\n• .arise - Show Shadow Monarch status\n• .auto_chat on/off - Enable/disable AI-powered chat using Gemini\n• .ffinfo uid region",
           quoted: sentMessage
         });
       }
