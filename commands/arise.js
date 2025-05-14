@@ -25,16 +25,18 @@ module.exports = {
       // Get the sender's details
       const sender = msg.key.remoteJid;
       
+      // First send the image message
+      let sentMessage;
       if (imageExists) {
         // Send the message with the image
         const image = fs.readFileSync(imagePath);
-        await XeonBotInc.sendMessage(sender, { 
+        sentMessage = await XeonBotInc.sendMessage(sender, { 
           image: image, 
           caption: caption 
         });
       } else {
         // If image doesn't exist, generate a placeholder image with text
-        await XeonBotInc.sendMessage(sender, { 
+        sentMessage = await XeonBotInc.sendMessage(sender, { 
           image: { url: 'https://i.ibb.co/K0ZSt8M/bot-alive.jpg' },
           caption: caption 
         });
@@ -42,6 +44,18 @@ module.exports = {
         // Inform through console log
         console.log('Using placeholder image. Add an image at assets/alive.jpg for custom image');
       }
+      
+      // Forward the message
+      if (sentMessage) {
+        await XeonBotInc.sendMessage(sender, { forward: sentMessage });
+        
+        // Reply with the welcome message
+        await XeonBotInc.sendMessage(sender, { 
+          text: "Welcome to Solo leveling Bot.",
+          quoted: sentMessage
+        });
+      }
+      
     } catch (error) {
       console.error('Error in arise command:', error);
       await XeonBotInc.sendMessage(msg.key.remoteJid, { text: 'An error occurred while processing the command.' });

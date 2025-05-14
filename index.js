@@ -118,10 +118,52 @@ async function qr() {
     }
   }
   
+  // Function to log message details
+  const logMessage = (message, direction) => {
+    try {
+      const sender = message.key.remoteJid;
+      const senderName = message.pushName || 'Unknown';
+      const messageType = Object.keys(message.message || {})[0] || 'unknown';
+      let content = '';
+      
+      // Extract text content based on message type
+      if (messageType === 'conversation') {
+        content = message.message.conversation;
+      } else if (messageType === 'extendedTextMessage') {
+        content = message.message.extendedTextMessage.text;
+      } else if (messageType === 'imageMessage') {
+        content = message.message.imageMessage.caption || '[Image]';
+      } else if (messageType === 'videoMessage') {
+        content = message.message.videoMessage.caption || '[Video]';
+      } else {
+        content = `[${messageType}]`;
+      }
+      
+      // Format and log the message
+      const directionIcon = direction === 'incoming' ? '📥' : '📤';
+      const colorFunction = direction === 'incoming' ? chalk.cyan : chalk.green;
+      console.log(colorFunction(`${directionIcon} ${direction.toUpperCase()} [${senderName}@${sender}]: ${content}`));
+    } catch (error) {
+      console.error('Error logging message:', error);
+    }
+  };
+  
+  // Monitor outgoing messages
+  XeonBotInc.ev.on("messages.send", async (m) => {
+    try {
+      logMessage(m, 'outgoing');
+    } catch (error) {
+      console.error("Error logging outgoing message:", error);
+    }
+  });
+  
+  // Handle incoming messages
   XeonBotInc.ev.on("messages.upsert", async (m) => {
     try {
-      // Log new messages
-      console.log(chalk.yellow("📩 New message received"));
+      // Log each message in the update
+      for (const message of m.messages) {
+        logMessage(message, 'incoming');
+      }
       
       // Handle commands in the message if command handler is loaded
       if (commandHandler) {
