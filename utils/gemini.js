@@ -106,17 +106,29 @@ global.Response = class Response {
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize the Gemini API with the key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCy_ZbcdfIvSUuuQVhZ4FW34DAFDEE-iIE';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.error('GEMINI_API_KEY environment variable is not set');
+}
 
 // Create a function to generate responses using direct API call
 async function generateResponse(prompt) {
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    if (!GEMINI_API_KEY) {
+      return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
     
     const requestBody = {
       contents: [{
         parts: [{ text: prompt }]
-      }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 800
+      }
     };
     
     const response = await fetch(url, {
@@ -128,6 +140,8 @@ async function generateResponse(prompt) {
     });
     
     if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Gemini API Error:', errorData);
       throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
     }
     
