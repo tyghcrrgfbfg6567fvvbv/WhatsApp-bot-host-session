@@ -1,3 +1,4 @@
+
 // Add fetch polyfill for Node.js v16
 const https = require('https');
 const { URL } = require('url');
@@ -130,7 +131,8 @@ async function generateResponse(prompt) {
       return "Sorry, the Gemini API key is not configured. Please contact the bot administrator.";
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    // Use the correct model endpoint for gemini-1.0-pro (updated from gemini-pro)
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${GEMINI_API_KEY}`;
 
     const requestBody = {
       contents: [{
@@ -153,6 +155,37 @@ async function generateResponse(prompt) {
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Gemini API Error:', errorData);
+      
+      // Try alternate model name if the first one fails
+      if (response.status === 404) {
+        console.log('Attempting with alternate model name...');
+        const alternateUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const alternateResponse = await fetch(alternateUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+        
+        if (!alternateResponse.ok) {
+          const altErrorData = await alternateResponse.text();
+          console.error('Alternate Gemini API Error:', altErrorData);
+          throw new Error(`API request failed with status ${alternateResponse.status}`);
+        }
+        
+        const altData = await alternateResponse.json();
+        
+        if (altData.candidates && 
+            altData.candidates[0] && 
+            altData.candidates[0].content && 
+            altData.candidates[0].content.parts && 
+            altData.candidates[0].content.parts[0].text) {
+          return altData.candidates[0].content.parts[0].text;
+        }
+      }
+      
       throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
     }
 
@@ -171,7 +204,7 @@ async function generateResponse(prompt) {
     }
   } catch (error) {
     console.error('Error generating response from Gemini:', error);
-    return "I'm having trouble connecting to my brain right now. Please try again later.";
+    return "I'm currently experiencing technical difficulties. Please try again later or use a command like .arise instead.";
   }
 }
 
