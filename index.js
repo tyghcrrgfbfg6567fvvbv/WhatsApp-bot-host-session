@@ -1,5 +1,6 @@
 const qrcode = require("qrcode-terminal")
 const fs = require('fs')
+const path = require('path')
 const { default: makeWASocket, Browsers, delay, useMultiFileAuthState, fetchLatestBaileysVersion, PHONENUMBER_MCC, makeCacheableSignalKeyStore } = require("@whiskeysockets/baileys")
 const Pino = require("pino")
 const NodeCache = require("node-cache")
@@ -168,6 +169,39 @@ async function qr() {
       // Handle commands in the message if command handler is loaded
       if (commandHandler) {
         await commandHandler.handleCommand(XeonBotInc, m);
+      }
+      
+      // Handle auto-chat functionality
+      try {
+        // Check if auto_chat is enabled in settings
+        const settingsPath = path.join(__dirname, 'settings.json');
+        if (fs.existsSync(settingsPath)) {
+          const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+          
+          // If auto_chat is enabled and it's not a command (doesn't start with '.')
+          if (settings.auto_chat && m.messages && m.messages.length > 0) {
+            const msg = m.messages[0];
+            if (!msg.key.fromMe && msg.message) {
+              const messageContent = msg.message.conversation || 
+                                  (msg.message.extendedTextMessage && 
+                                    msg.message.extendedTextMessage.text) || '';
+              
+              // Only auto-reply if it's not a command
+              if (messageContent && !messageContent.startsWith('.')) {
+                const sender = msg.key.remoteJid;
+                
+                // Simple auto-reply
+                await XeonBotInc.sendMessage(sender, { 
+                  text: "I'm a Solo Leveling Bot. You can try these commands:\n• .arise - Show bot status\n• .auto_chat on/off - Enable/disable auto replies",
+                  quoted: msg
+                });
+                console.log(chalk.blue(`🤖 Auto-replied to ${sender}`));
+              }
+            }
+          }
+        }
+      } catch (autoError) {
+        console.error("Error in auto-chat handler:", autoError);
       }
     } catch (error) {
       console.error("Error handling message:", error);
