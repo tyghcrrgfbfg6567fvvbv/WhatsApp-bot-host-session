@@ -4,3 +4,24 @@ entrypoint = "main.sh"
 
 [nix]
 channel = "stable-22_11"
+
+[workflows]
+runButton = "Run WhatsApp Pairing"
+
+[[workflows.workflow]]
+name = "Run"
+author = 42641424
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node --max-old-space-size=256 index.js"
+
+[[workflows.workflow]]
+name = "Run WhatsApp Pairing"
+author = 42641424
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash run.sh"
