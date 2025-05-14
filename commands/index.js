@@ -34,7 +34,10 @@ const handleCommand = async (XeonBotInc, m) => {
         const settingsPath = path.join(__dirname, '../settings.json');
         if (fs.existsSync(settingsPath)) {
           const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-          return jid.includes(settings.owner);
+          // Clean the JID by removing @s.whatsapp.net and any device identifiers
+          const cleanJid = jid.split('@')[0].split(':')[0];
+          console.log(`Checking owner: ${cleanJid} against ${settings.owner}`);
+          return cleanJid === settings.owner;
         }
         return jid.includes('918822308081'); // Fallback to hardcoded owner
       } catch (error) {
