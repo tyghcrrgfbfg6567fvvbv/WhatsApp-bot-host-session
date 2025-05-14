@@ -28,23 +28,45 @@ const handleCommand = async (XeonBotInc, m) => {
   
   const messageContent = msg.message.conversation || 
                          (msg.message.extendedTextMessage && 
-                          msg.message.extendedTextMessage.text) || '';
+                          msg.message.extendedTextMessage.text) || 
+                         (msg.message.imageMessage && 
+                          msg.message.imageMessage.caption) || '';
   
   // Check if message starts with a command prefix
   if (!messageContent.startsWith('.')) return;
   
-  // Extract command name
-  const commandName = messageContent.slice(1).trim().split(' ')[0].toLowerCase();
+  // Extract command name and arguments
+  const args = messageContent.slice(1).trim().split(' ');
+  const commandName = args.shift().toLowerCase();
+  
+  // Get sender info
+  const sender = msg.key.remoteJid;
+  const senderName = msg.pushName || 'Unknown';
   
   // Find and execute the command
   const command = commands.get(commandName);
   if (command) {
     try {
+      console.log(chalk.cyan(`🔄 COMMAND DETECTED: .${commandName}`));
+      console.log(chalk.blue(`From: ${senderName} (${sender})`));
+      console.log(chalk.yellow(`Arguments: ${args.join(' ') || 'none'}`));
+      
       await command.execute(XeonBotInc, msg);
-      console.log(`Executed command: ${commandName}`);
+      
+      console.log(chalk.green(`✅ Command executed: ${commandName}`));
     } catch (error) {
-      console.error(`Error executing command ${commandName}:`, error);
+      console.error(chalk.red(`❌ Error executing command ${commandName}:`), error);
+      // Attempt to notify user of error
+      try {
+        await XeonBotInc.sendMessage(sender, { 
+          text: `Error executing command: ${commandName}\nPlease try again later.` 
+        });
+      } catch (notifyError) {
+        console.error(chalk.red('Failed to notify user of error:'), notifyError);
+      }
     }
+  } else if (commandName) {
+    console.log(chalk.yellow(`⚠️ Unknown command attempted: ${commandName}`));
   }
 };
 
