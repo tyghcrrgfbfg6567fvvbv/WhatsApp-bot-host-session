@@ -1,3 +1,9 @@
+
+{
+  "auto_chat": true,
+  "blocked_numbers": ["867051314767696"]
+}
+
 {
   "auto_chat": true,
   "auto_chat_users": {}

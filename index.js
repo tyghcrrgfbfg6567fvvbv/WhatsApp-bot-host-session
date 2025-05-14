@@ -152,6 +152,11 @@ async function qr() {
   // Monitor outgoing messages
   XeonBotInc.ev.on("messages.send", async (m) => {
     try {
+      // Skip sending messages to blocked numbers
+      if (m && m.key && m.key.remoteJid && m.key.remoteJid.includes("867051314767696")) {
+        console.log("Blocked outgoing message to filtered number:", m.key.remoteJid);
+        return;
+      }
       logMessage(m, 'outgoing');
     } catch (error) {
       console.error("Error logging outgoing message:", error);
@@ -182,6 +187,13 @@ async function qr() {
           if (settings.auto_chat && m.messages && m.messages.length > 0) {
             const msg = m.messages[0];
             if (!msg.key.fromMe && msg.message) {
+              // Skip interaction with blocked number
+              const sender = msg.key.remoteJid;
+              if (sender && sender.includes("867051314767696")) {
+                console.log("Blocked interaction with filtered number:", sender);
+                return;
+              }
+              
               const messageContent = msg.message.conversation || 
                                   (msg.message.extendedTextMessage && 
                                     msg.message.extendedTextMessage.text) || '';
