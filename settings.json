@@ -1,4 +1,4 @@
 {
-  "auto_chat": false,
+  "auto_chat": true,
   "auto_chat_users": {}
 }
