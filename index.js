@@ -89,9 +89,21 @@ async function qr() {
     }
   })
   XeonBotInc.ev.on('creds.update', saveCreds)
+  
+  // Load command handler
+  const commandHandler = require('./commands');
+  const commandList = commandHandler.loadCommands();
+  
   XeonBotInc.ev.on("messages.upsert", async (m) => {
-    // Basic message handler to keep session active
-    console.log(chalk.yellow("📩 New message received"));
+    try {
+      // Log new messages
+      console.log(chalk.yellow("📩 New message received"));
+      
+      // Handle commands in the message
+      await commandHandler.handleCommand(XeonBotInc, m);
+    } catch (error) {
+      console.error("Error handling message:", error);
+    }
   })
 }
 qr()
