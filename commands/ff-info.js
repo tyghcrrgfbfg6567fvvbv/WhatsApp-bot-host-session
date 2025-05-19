@@ -1,3 +1,13 @@
+/**
+ * @command
+ * name: ffinfo
+ * title: Free Fire Player Info
+ * description: Fetch Free Fire player stats by UID and region
+ * example: .ffinfo 123456789 AS
+ * subcommands:
+ *   - cmd: <UID> <Region>
+ *     desc: Provide the player UID and region code (e.g., AS, EU)
+ */
 
 const fetch = global.fetch || require('node-fetch');
 
@@ -30,7 +40,7 @@ module.exports = {
       await XeonBotInc.sendPresenceUpdate('composing', sender);
       
       // Fetch data from API
-      const response = await fetch(`https://brokenplay23-ff-info.onrender.com/api/account?uid=${uid}&region=${region}`);
+      const response = await fetch(`https://brokenplayz23-ffinfo.onrender.com/api/account?uid=${uid}&region=${region}`);
       
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);

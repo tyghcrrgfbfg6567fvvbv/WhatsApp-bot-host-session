@@ -1,0 +1,1 @@
+Error fetching player info: Browser was not found at the configured executablePath (/usr/bin/firefox)

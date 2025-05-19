@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - WhatsApp Bot Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .help-sidebar {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+        .help-content {
+            padding-bottom: 50px;
+        }
+        .help-section {
+            padding-top: 60px;
+            margin-top: -50px;
+        }
+        .help-section h3 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .card-header.category {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .screenshot {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar">
+                <div class="d-flex flex-column p-3 text-white bg-dark h-100">
+                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <i class="bi bi-whatsapp me-2 fs-4"></i>
+                        <span class="fs-4">Bot Manager</span>
+                    </a>
+                    <hr>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link text-white">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/add-session.html" class="nav-link text-white">
+                                <i class="bi bi-plus-circle me-2"></i>
+                                Add Session
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/manage-commands.html" class="nav-link text-white">
+                                <i class="bi bi-code-slash me-2"></i>
+                                Manage Commands
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logs.html" class="nav-link text-white">
+                                <i class="bi bi-journal-text me-2"></i>
+                                Logs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/system-commands.html" class="nav-link text-white">
+                                <i class="bi bi-terminal me-2"></i>
+                                System Commands
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/help-center.html" class="nav-link active text-white">
+                                <i class="bi bi-question-circle me-2"></i>
+                                Help Center
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-10 main-content">
+                <div class="container mt-4 help-content">
+                    <h2><i class="bi bi-question-circle me-2"></i>Help Center</h2>
+                    
+                    <div class="row mt-4">
+                        <!-- Help Topics Sidebar -->
+                        <div class="col-md-3">
+                            <div class="help-sidebar">
+                                <div class="card">
+                                    <div class="card-header category">
+                                        <i class="bi bi-book me-2"></i>Table of Contents
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="list-group list-group-flush">
+                                            <a href="#overview" class="list-group-item list-group-item-action">Overview</a>
+                                            <a href="#getting-started" class="list-group-item list-group-item-action">Getting Started</a>
+                                            <a href="#managing-sessions" class="list-group-item list-group-item-action">Managing Sessions</a>
+                                            <a href="#commands" class="list-group-item list-group-item-action">Bot Commands</a>
+                                            <a href="#logs" class="list-group-item list-group-item-action">Viewing Logs</a>
+                                            <a href="#system-commands" class="list-group-item list-group-item-action">System Commands</a>
+                                            <a href="#troubleshooting" class="list-group-item list-group-item-action">Troubleshooting</a>
+                                            <a href="#faq" class="list-group-item list-group-item-action">FAQ</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Help Content -->
+                        <div class="col-md-9">
+                            <!-- Overview Section -->
+                            <div id="overview" class="help-section">
+                                <h3>Overview</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>What is WhatsApp Bot Manager?</h4>
+                                        <p>
+                                            WhatsApp Bot Manager is a powerful multi-session WhatsApp bot platform that allows you to manage multiple WhatsApp accounts from a single web interface. Built on Node.js and the Baileys library, it provides a comprehensive solution for automating WhatsApp interactions.
+                                        </p>
+                                        
+                                        <h4>Key Features</h4>
+                                        <ul>
+                                            <li><strong>Multi-Session Support:</strong> Manage multiple WhatsApp accounts simultaneously</li>
+                                            <li><strong>Custom Commands:</strong> Create and manage custom bot commands</li>
+                                            <li><strong>Real-time Logs:</strong> View detailed logs for each session</li>
+                                            <li><strong>System Commands:</strong> Execute system commands directly from the web interface</li>
+                                            <li><strong>User-friendly Interface:</strong> Easy-to-use dashboard for monitoring and managing all sessions</li>
+                                        </ul>
+                                        
+                                        <h4>System Architecture</h4>
+                                        <p>
+                                            The WhatsApp Bot Manager consists of the following components:
+                                        </p>
+                                        <ul>
+                                            <li><strong>Backend Server:</strong> Node.js server handling WhatsApp connections and API endpoints</li>
+                                            <li><strong>Baileys Library:</strong> Core WhatsApp Web API implementation</li>
+                                            <li><strong>Web Interface:</strong> Bootstrap-based responsive UI for managing the bot</li>
+                                            <li><strong>Socket.IO:</strong> Real-time communication between the server and web interface</li>
+                                            <li><strong>Command System:</strong> Modular system for handling WhatsApp commands</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Getting Started Section -->
+                            <div id="getting-started" class="help-section">
+                                <h3>Getting Started</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>System Requirements</h4>
+                                        <ul>
+                                            <li>Node.js 14.x or higher</li>
+                                            <li>Modern web browser (Chrome, Firefox, Edge)</li>
+                                            <li>Internet connection</li>
+                                            <li>WhatsApp account(s)</li>
+                                        </ul>
+                                        
+                                        <h4>Installation</h4>
+                                        <p>To install and run the WhatsApp Bot Manager:</p>
+                                        <ol>
+                                            <li>Clone the repository or download the source code</li>
+                                            <li>Navigate to the project directory</li>
+                                            <li>Install dependencies:
+                                                <pre>npm install</pre>
+                                            </li>
+                                            <li>Start the server:
+                                                <pre>node index.js</pre>
+                                            </li>
+                                            <li>Open your browser and navigate to:
+                                                <pre>http://localhost:3000</pre>
+                                            </li>
+                                        </ol>
+                                        
+                                        <h4>First-time Setup</h4>
+                                        <p>
+                                            When you first start the WhatsApp Bot Manager, you'll need to add at least one WhatsApp session. Follow these steps:
+                                        </p>
+                                        <ol>
+                                            <li>Click on "Add Session" in the sidebar</li>
+                                            <li>Enter your phone number (with country code, e.g., 918XXXXXXXXX)</li>
+                                            <li>Provide a session name (optional)</li>
+                                            <li>Click "Start Session"</li>
+                                            <li>Scan the QR code with your WhatsApp app to link your account</li>
+                                        </ol>
+                                        <p>
+                                            Once connected, you'll be redirected to the dashboard where you can see your active session.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Managing Sessions Section -->
+                            <div id="managing-sessions" class="help-section">
+                                <h3>Managing Sessions</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>Adding a New Session</h4>
+                                        <p>To add a new WhatsApp session:</p>
+                                        <ol>
+                                            <li>Navigate to the "Add Session" page from the sidebar</li>
+                                            <li>Enter your phone number with country code (e.g., 918XXXXXXXXX)</li>
+                                            <li>Provide an optional session name for easy identification</li>
+                                            <li>Click "Start Session"</li>
+                                            <li>Scan the QR code with your WhatsApp app</li>
+                                        </ol>
+                                        
+                                        <h4>Viewing Active Sessions</h4>
+                                        <p>
+                                            The Dashboard displays all your active WhatsApp sessions. For each session, you can see:
+                                        </p>
+                                        <ul>
+                                            <li>Phone number</li>
+                                            <li>Connection status (Connected, Connecting, Disconnected)</li>
+                                            <li>Session ID</li>
+                                            <li>Start time</li>
+                                            <li>Message count</li>
+                                        </ul>
+                                        
+                                        <h4>Stopping a Session</h4>
+                                        <p>To stop an active WhatsApp session:</p>
+                                        <ol>
+                                            <li>Go to the Dashboard</li>
+                                            <li>Find the session you want to stop</li>
+                                            <li>Click the "Stop Session" button</li>
+                                            <li>Confirm the action when prompted</li>
+                                        </ol>
+                                        <p class="text-warning">
+                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                            <strong>Note:</strong> Stopping a session will disconnect your WhatsApp account from the bot. You'll need to scan the QR code again to reconnect.
+                                        </p>
+                                        
+                                        <h4>Session States</h4>
+                                        <p>A WhatsApp session can be in one of the following states:</p>
+                                        <ul>
+                                            <li><span class="badge bg-success">Connected</span> - Successfully connected to WhatsApp</li>
+                                            <li><span class="badge bg-warning">Connecting</span> - In the process of connecting</li>
+                                            <li><span class="badge bg-danger">Disconnected</span> - Lost connection to WhatsApp</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Commands Section -->
+                            <div id="commands" class="help-section">
+                                <h3>Bot Commands</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>Understanding Commands</h4>
+                                        <p>
+                                            Commands are JavaScript modules that define how the bot responds to specific messages. When a user sends a message that starts with a command prefix (e.g., "!command"), the bot executes the corresponding command module.
+                                        </p>
+                                        
+                                        <h4>Available Commands</h4>
+                                        <p>The WhatsApp Bot Manager comes with several built-in commands:</p>
+                                        <ul>
+                                            <li><strong>arise</strong> - Wake up the bot</li>
+                                            <li><strong>auto_chat</strong> - Automated chat responses</li>
+                                            <li><strong>ffinfo</strong> - Get file information</li>
+                                            <li><strong>image_gen</strong> - Generate images</li>
+                                            <li><strong>insta_reel</strong> - Download Instagram reels</li>
+                                            <li><strong>memory</strong> - Memory management</li>
+                                            <li><strong>system_call</strong> - Execute system commands</li>
+                                            <li><strong>timer_off</strong> - Set timers</li>
+                                            <li><strong>yt_music</strong> - Download YouTube music</li>
+                                            <li><strong>yt_video</strong> - Download YouTube videos</li>
+                                        </ul>
+                                        
+                                        <h4>Creating Custom Commands</h4>
+                                        <p>To create a new custom command:</p>
+                                        <ol>
+                                            <li>Navigate to the "Manage Commands" page</li>
+                                            <li>Click "Create New Command"</li>
+                                            <li>Enter a name for your command (without spaces or special characters)</li>
+                                            <li>Write your command code in the editor</li>
+                                            <li>Click "Save Command"</li>
+                                        </ol>
+                                        
+                                        <h4>Command Structure</h4>
+                                        <p>A basic command module has the following structure:</p>
+                                        <pre>module.exports = {
+    name: "commandname",
+    description: "Command description",
+    execute: async (sock, msg, args) => {
+        // Command logic here
+        // sock - WhatsApp socket connection
+        // msg - Message object
+        // args - Command arguments
+        
+        // Example: Reply to the message
+        await sock.sendMessage(msg.key.remoteJid, { text: "Hello!" }, { quoted: msg });
+    }
+};</pre>
+                                        
+                                        <h4>Editing Commands</h4>
+                                        <p>To edit an existing command:</p>
+                                        <ol>
+                                            <li>Go to the "Manage Commands" page</li>
+                                            <li>Select the command you want to edit from the list</li>
+                                            <li>Modify the code in the editor</li>
+                                            <li>Click "Save Command"</li>
+                                        </ol>
+                                        
+                                        <h4>Deleting Commands</h4>
+                                        <p>To delete a command:</p>
+                                        <ol>
+                                            <li>Navigate to the "Manage Commands" page</li>
+                                            <li>Select the command you want to delete</li>
+                                            <li>Click the "Delete" button</li>
+                                            <li>Confirm the deletion when prompted</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Logs Section -->
+                            <div id="logs" class="help-section">
+                                <h3>Viewing Logs</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>Understanding Logs</h4>
+                                        <p>
+                                            The WhatsApp Bot Manager provides comprehensive logging for all sessions. Logs help you monitor bot activity, troubleshoot issues, and understand what's happening with your WhatsApp sessions.
+                                        </p>
+                                        
+                                        <h4>Accessing Logs</h4>
+                                        <p>There are two ways to access logs:</p>
+                                        <ol>
+                                            <li><strong>From the Dashboard:</strong> Click the "View Logs" button for a specific session</li>
+                                            <li><strong>From the Sidebar:</strong> Click on "Logs" to view logs for all sessions</li>
+                                        </ol>
+                                        
+                                        <h4>Log Types</h4>
+                                        <p>Logs are color-coded by type for easy identification:</p>
+                                        <ul>
+                                            <li><span style="color: #7fbfff;">Info</span> - General information about the session</li>
+                                            <li><span style="color: #ff6b6b;">Error</span> - Error messages and exceptions</li>
+                                            <li><span style="color: #ffd700;">Warning</span> - Warning messages</li>
+                                            <li><span style="color: #7fff7f;">Incoming</span> - Incoming messages</li>
+                                            <li><span style="color: #ff7fff;">Outgoing</span> - Outgoing messages</li>
+                                        </ul>
+                                        
+                                        <h4>Filtering Logs</h4>
+                                        <p>You can filter logs by:</p>
+                                        <ul>
+                                            <li><strong>Session:</strong> Select a specific session from the dropdown</li>
+                                            <li><strong>Log Type:</strong> Filter by info, error, warning, incoming, or outgoing</li>
+                                            <li><strong>Time Range:</strong> View logs from a specific time period</li>
+                                        </ul>
+                                        
+                                        <h4>Clearing Logs</h4>
+                                        <p>
+                                            To clear the log display, click the "Clear Logs" button in the log controls section. This only clears the display and does not delete the actual log files.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- System Commands Section -->
+                            <div id="system-commands" class="help-section">
+                                <h3>System Commands</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>What are System Commands?</h4>
+                                        <p>
+                                            The System Commands feature allows you to execute various system operations directly from the web interface. This includes package installation, system information retrieval, network diagnostics, and custom commands.
+                                        </p>
+                                        
+                                        <h4>Command Types</h4>
+                                        <p>The System Commands page supports four types of commands:</p>
+                                        <ul>
+                                            <li><strong>Custom Commands:</strong> Run any custom command (with security restrictions)</li>
+                                            <li><strong>Package Installation:</strong> Install packages using npm, pip, chocolatey, or winget</li>
+                                            <li><strong>System Information:</strong> Get information about your system</li>
+                                            <li><strong>Network Tools:</strong> Run network diagnostics and tests</li>
+                                        </ul>
+                                        
+                                        <h4>Package Installation</h4>
+                                        <p>To install a package:</p>
+                                        <ol>
+                                            <li>Select "Package Installation" from the command type dropdown</li>
+                                            <li>Choose a package manager (npm, pip, chocolatey, winget)</li>
+                                            <li>Enter the package name</li>
+                                            <li>Check "Install Globally" if needed</li>
+                                            <li>Click "Execute Command"</li>
+                                        </ol>
+                                        <p class="text-info">
+                                            <i class="bi bi-info-circle me-2"></i>
+                                            <strong>Note:</strong> All package installations automatically answer "yes" to any prompts.
+                                        </p>
+                                        
+                                        <h4>System Information Commands</h4>
+                                        <p>Available system information commands:</p>
+                                        <ul>
+                                            <li><strong>systeminfo:</strong> Display detailed system information</li>
+                                            <li><strong>dir:</strong> List directory contents</li>
+                                            <li><strong>tasklist:</strong> Show running processes</li>
+                                            <li><strong>ver:</strong> Display OS version</li>
+                                            <li><strong>echo %PATH%:</strong> Show PATH environment variable</li>
+                                        </ul>
+                                        
+                                        <h4>Network Tools</h4>
+                                        <p>Available network tools:</p>
+                                        <ul>
+                                            <li><strong>ipconfig:</strong> Display network configuration</li>
+                                            <li><strong>ping:</strong> Test connectivity to a host</li>
+                                            <li><strong>netstat:</strong> Show network statistics</li>
+                                            <li><strong>tracert:</strong> Trace route to a destination</li>
+                                        </ul>
+                                        
+                                        <h4>Security Restrictions</h4>
+                                        <p>
+                                            For security reasons, certain potentially dangerous commands are blocked, including:
+                                        </p>
+                                        <ul>
+                                            <li>Commands that could delete files or directories</li>
+                                            <li>Commands that could format drives</li>
+                                            <li>Commands that could modify system files</li>
+                                            <li>Commands that could shut down the system</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Troubleshooting Section -->
+                            <div id="troubleshooting" class="help-section">
+                                <h3>Troubleshooting</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h4>Common Issues and Solutions</h4>
+                                        
+                                        <div class="accordion" id="troubleshootingAccordion">
+                                            <!-- Connection Issues -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                        Connection Issues
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#troubleshootingAccordion">
+                                                    <div class="accordion-body">
+                                                        <p><strong>Problem:</strong> Unable to connect to WhatsApp</p>
+                                                        <p><strong>Solutions:</strong></p>
+                                                        <ul>
+                                                            <li>Ensure your internet connection is stable</li>
+                                                            <li>Verify that your WhatsApp account is active on your phone</li>
+                                                            <li>Try logging out and scanning the QR code again</li>
+                                                            <li>Check if your WhatsApp version is up to date</li>
+                                                            <li>Restart the bot server</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- QR Code Issues -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingTwo">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                        QR Code Issues
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#troubleshootingAccordion">
+                                                    <div class="accordion-body">
+                                                        <p><strong>Problem:</strong> QR code not appearing or not scanning</p>
+                                                        <p><strong>Solutions:</strong></p>
+                                                        <ul>
+                                                            <li>Refresh the page to generate a new QR code</li>
+                                                            <li>Ensure your phone camera is working properly</li>
+                                                            <li>Try using WhatsApp Web's "Scan QR Code" option directly</li>
+                                                            <li>Clear browser cache and cookies</li>
+                                                            <li>Restart the bot server</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Command Execution Issues -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingThree">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                        Command Execution Issues
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#troubleshootingAccordion">
+                                                    <div class="accordion-body">
+                                                        <p><strong>Problem:</strong> Commands not executing or responding</p>
+                                                        <p><strong>Solutions:</strong></p>
+                                                        <ul>
+                                                            <li>Check the logs for any error messages</li>
+                                                            <li>Verify that the command syntax is correct</li>
+                                                            <li>Ensure the command file exists and is properly formatted</li>
+                                                            <li>Try reloading the commands by saving them again</li>
+                                                            <li>Restart the bot server</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- System Command Issues -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingFour">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                        System Command Issues
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#troubleshootingAccordion">
+                                                    <div class="accordion-body">
+                                                        <p><strong>Problem:</strong> System commands failing or not executing</p>
+                                                        <p><strong>Solutions:</strong></p>
+                                                        <ul>
+                                                            <li>Verify that the command is allowed by the security restrictions</li>
+                                                            <li>Check if the required tools are installed on your system</li>
+                                                            <li>Ensure you have the necessary permissions to execute the command</li>
+                                                            <li>Try running the command with administrator privileges</li>
+                                                            <li>Check the command output for specific error messages</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ Section -->
+                            <div id="faq" class="help-section">
+                                <h3>Frequently Asked Questions</h3>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="accordion" id="faqAccordion">
+                                            <!-- FAQ 1 -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faqHeadingOne">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                                                        How many WhatsApp accounts can I manage simultaneously?
+                                                    </button>
+                                                </h2>
+                                                <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>
+                                                            You can manage multiple WhatsApp accounts simultaneously with the WhatsApp Bot Manager. The exact number depends on your system resources, but most users can comfortably run 5-10 sessions on a standard server. Each session requires approximately 100-200MB of RAM.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- FAQ 2 -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faqHeadingTwo">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                                                        Will WhatsApp detect that I'm using a bot?
+                                                    </button>
+                                                </h2>
+                                                <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>
+                                                            The WhatsApp Bot Manager uses the official WhatsApp Web protocol through the Baileys library, which mimics normal WhatsApp Web usage. However, excessive automated activity or spamming can trigger WhatsApp's anti-bot measures. To avoid detection:
+                                                        </p>
+                                                        <ul>
+                                                            <li>Avoid sending too many messages in a short period</li>
+                                                            <li>Don't use the bot for spamming or bulk messaging</li>
+                                                            <li>Add random delays between automated actions</li>
+                                                            <li>Keep your bot's behavior as human-like as possible</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- FAQ 3 -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faqHeadingThree">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                                                        Do I need to scan the QR code every time?
+                                                    </button>
+                                                </h2>
+                                                <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>
+                                                            No, you don't need to scan the QR code every time. The WhatsApp Bot Manager saves your session credentials, allowing you to reconnect without rescanning. However, you may need to rescan in these cases:
+                                                        </p>
+                                                        <ul>
+                                                            <li>If you log out from WhatsApp Web on your phone</li>
+                                                            <li>If you clear the session data on the server</li>
+                                                            <li>If WhatsApp's security protocols change</li>
+                                                            <li>If your session expires (typically after 2-4 weeks of inactivity)</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- FAQ 4 -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faqHeadingFour">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                                                        Can I create my own custom commands?
+                                                    </button>
+                                                </h2>
+                                                <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>
+                                                            Yes, you can create custom commands using JavaScript. The WhatsApp Bot Manager provides a built-in command editor where you can write, test, and deploy your own commands. Each command is a JavaScript module that exports specific properties and functions.
+                                                        </p>
+                                                        <p>
+                                                            To create a custom command, go to the "Manage Commands" page and click "Create New Command". You can use the provided template as a starting point.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- FAQ 5 -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faqHeadingFive">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFive" aria-expanded="false" aria-controls="faqCollapseFive">
+                                                        Is my WhatsApp data secure?
+                                                    </button>
+                                                </h2>
+                                                <div id="faqCollapseFive" class="accordion-collapse collapse" aria-labelledby="faqHeadingFive" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        <p>
+                                                            The WhatsApp Bot Manager runs locally on your server, so your data remains under your control. The bot does not send your WhatsApp data to any external servers. However, you should take these security precautions:
+                                                        </p>
+                                                        <ul>
+                                                            <li>Run the bot on a secure, password-protected server</li>
+                                                            <li>Use HTTPS if exposing the web interface to the internet</li>
+                                                            <li>Implement proper authentication for the web interface</li>
+                                                            <li>Regularly backup and secure your session data</li>
+                                                            <li>Keep the bot software updated</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Highlight active section in sidebar
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.help-section');
+            const navLinks = document.querySelectorAll('.help-sidebar .list-group-item');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= sectionTop - 100) {
+                    currentSection = '#' + section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

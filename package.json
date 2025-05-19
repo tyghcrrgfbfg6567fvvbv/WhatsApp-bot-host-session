@@ -22,14 +22,23 @@
     "@colors/colors": "1.5.0",
     "@google/generative-ai": "^0.24.1",
     "@whiskeysockets/baileys": "^6.6.0",
+    "axios": "^1.9.0",
     "cfonts": "~2.10.0",
     "chalk": "^4.1.2",
     "dotenv": "^16.5.0",
+    "express": "^4.18.2",
     "fs-extra": "^11.1.1",
+    "multer": "^1.4.5-lts.1",
     "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
     "path": "^0.12.7",
     "pino": "^8.1.0",
-    "qrcode-terminal": "^0.12.0"
+    "pino-pretty": "^10.2.3",
+    "puppeteer-core": "^24.8.2",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.7.2",
+    "uuid": "^9.0.1",
+    "ytdl-core": "^4.11.5"
   },
   "bugs": {
     "url": "https://github.com/DGXeon/Xeon-PairCode/issues"

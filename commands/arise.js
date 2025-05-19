@@ -1,3 +1,13 @@
+/**
+ * @command
+ * name: arise
+ * title: Summon Status Panel
+ * description: Displays system status like storage, RAM, internet speed, and uptime in Solo Leveling style
+ * example: .arise
+ * subcommands:
+ *   - cmd: none
+ *     desc: Just send `.arise` to view the current system status
+ */
 
 const fs = require('fs');
 const path = require('path');

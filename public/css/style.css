@@ -1,0 +1,78 @@
+/* Main layout styles */
+html, body {
+    height: 100%;
+}
+
+.container-fluid, .row {
+    min-height: 100vh;
+}
+
+.sidebar {
+    padding: 0;
+}
+
+.main-content {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Dashboard styles */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1rem;
+}
+
+.session-status {
+    font-size: 0.8rem;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+/* Pairing code display */
+.pairing-code-display {
+    font-family: monospace;
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+}
+
+/* Command editor styles */
+.CodeMirror {
+    height: 400px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+/* Log styles */
+.log-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.log-container::-webkit-scrollbar-track {
+    background: #2e2e2e;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+}

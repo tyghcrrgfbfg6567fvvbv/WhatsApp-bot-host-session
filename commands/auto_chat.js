@@ -1,3 +1,17 @@
+/**
+ * @command
+ * name: auto_chat
+ * title: AI Assistant Toggle
+ * description: Toggle AI-powered chat assistant
+ * example: .auto_chat on/off
+ * subcommands:
+ *   - cmd: on
+ *     desc: Activate AI
+ *   - cmd: off
+ *     desc: Deactivate AI
+ */
+
+
 
 const fs = require('fs');
 const path = require('path');
