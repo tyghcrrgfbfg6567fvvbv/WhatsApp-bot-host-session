@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "sessions/**/credit.json",
+    "commands/*.js"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "sessions/**/!(credit.json)"
+  ],
+  "exec": "node index.js"
+}
