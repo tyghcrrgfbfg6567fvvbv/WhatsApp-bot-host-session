@@ -1,11 +1,12 @@
 {
   "watch": [
-    "sessions/**/credit.json",
-    "command/*.js"
+    "command",
+    "sessions"
   ],
   "ext": "js,json",
   "ignore": [
-    "sessions/**/!(credit.json)"
+    "sessions/**",
+    "!sessions/**/credit.json"
   ],
   "exec": "node index.js"
 }
