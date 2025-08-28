@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,24 +19,25 @@
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
-    "@colors/colors": "1.5.0",
+    "@colors/colors": "^1.6.0",
     "@google/generative-ai": "^0.24.1",
-    "@whiskeysockets/baileys": "^6.6.0",
-    "axios": "^1.9.0",
+    "@whiskeysockets/baileys": "^6.7.18",
+    "axios": "^1.11.0",
     "cfonts": "~2.10.0",
     "chalk": "^4.1.2",
-    "dotenv": "^16.5.0",
-    "express": "^4.18.2",
-    "fs-extra": "^11.1.1",
+    "cheerio": "^1.1.2",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "fs-extra": "^11.3.1",
     "multer": "^1.4.5-lts.1",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2",
     "path": "^0.12.7",
-    "pino": "^8.1.0",
-    "pino-pretty": "^10.2.3",
-    "puppeteer-core": "^24.8.2",
+    "pino": "^8.21.0",
+    "pino-pretty": "^10.3.1",
+    "puppeteer-core": "^24.17.1",
     "qrcode-terminal": "^0.12.0",
-    "socket.io": "^4.7.2",
+    "socket.io": "^4.8.1",
     "uuid": "^9.0.1",
     "ytdl-core": "^4.11.5"
   },
