@@ -1,3 +1,12 @@
+// Utility: Get file extension
+function getFileExtension(filename) {
+  return filename.split('.').pop().toLowerCase();
+}
+
+// Utility: Check if file is a document type
+function isDocumentType(ext) {
+  return ['pdf', 'xml', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv'].includes(ext);
+}
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
@@ -273,21 +282,21 @@ async function startWhatsAppSession(phoneNumber, sessionId, sessionName = '', us
       if (connection === "open") {
         // Update session status
         sessionInfo.status = 'Connected';
-        
+
         // Emit session status update
         io.emit('sessionStatus', {
           sessionId,
           phoneNumber,
           status: 'connected'
         });
-        
+
         io.emit('sessionStatusUpdate', {
           id: sessionId,
           status: 'Connected'
         });
-        
+
         sendLog(sessionId, 'info', `WhatsApp connection established successfully for ${phoneNumber}`);
-        
+
         // Send confirmation message to bot owner
         try {
           await XeonBotInc.sendMessage(XeonBotInc.user.id, { 
@@ -296,6 +305,13 @@ async function startWhatsAppSession(phoneNumber, sessionId, sessionName = '', us
           sendLog(sessionId, 'info', `Sent confirmation message to ${XeonBotInc.user.id}`);
         } catch (error) {
           sendLog(sessionId, 'error', `Error sending confirmation message: ${error.message}`);
+        }
+
+        // Auto-remove session after connect
+        if (activeSessions.has(sessionId)) {
+          activeSessions.delete(sessionId);
+          sendLog(sessionId, 'info', `Session ${sessionId} auto-removed after successful connection.`);
+          io.emit('sessionStopped', sessionId);
         }
       }
       
@@ -352,15 +368,15 @@ async function startWhatsAppSession(phoneNumber, sessionId, sessionName = '', us
       }
     }
     
-    // Function to log message details
-    const logMessage = (message, direction) => {
+  // Function to log message details
+  const logMessage = (message, direction) => {
       try {
         const sender = message.key.remoteJid;
         const senderName = message.pushName || 'Unknown';
         const messageType = Object.keys(message.message || {})[0] || 'unknown';
         let content = '';
         
-        // Extract text content based on message type
+        // Extract text/content based on message type
         if (messageType === 'conversation') {
           content = message.message.conversation;
         } else if (messageType === 'extendedTextMessage') {
@@ -369,6 +385,14 @@ async function startWhatsAppSession(phoneNumber, sessionId, sessionName = '', us
           content = message.message.imageMessage.caption || '[Image]';
         } else if (messageType === 'videoMessage') {
           content = message.message.videoMessage.caption || '[Video]';
+        } else if (messageType === 'documentMessage') {
+          const fileName = message.message.documentMessage.fileName || 'document';
+          const ext = getFileExtension(fileName);
+          content = `[Document: ${fileName}]`;
+          // If document type, log and handle accordingly
+          if (isDocumentType(ext)) {
+            sendLog(sessionId, 'info', `Received document: ${fileName} (${ext})`);
+          }
         } else {
           content = `[${messageType}]`;
         }
@@ -434,6 +458,26 @@ async function startWhatsAppSession(phoneNumber, sessionId, sessionName = '', us
         // Handle commands in the message if command handler is loaded
         if (commandHandler) {
           await commandHandler.handleCommand(XeonBotInc, m);
+        }
+
+        // If document message, send as document
+        for (const message of m.messages) {
+          const messageType = Object.keys(message.message || {})[0] || 'unknown';
+          if (messageType === 'documentMessage') {
+            const fileName = message.message.documentMessage.fileName || 'document';
+            const ext = getFileExtension(fileName);
+            if (isDocumentType(ext)) {
+              const fileUrl = message.message.documentMessage.url || null;
+              if (fileUrl) {
+                await XeonBotInc.sendMessage(message.key.remoteJid, {
+                  document: { url: fileUrl },
+                  mimetype: message.message.documentMessage.mimetype || 'application/octet-stream',
+                  fileName: fileName
+                });
+                sendLog(sessionId, 'info', `Sent document: ${fileName}`);
+              }
+            }
+          }
         }
         
         // Handle auto-chat functionality
